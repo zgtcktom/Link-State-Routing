@@ -96,6 +96,11 @@
                   <TextArea editable="false" id="txt_status" />
                </children>
             </VBox>
+            <HBox spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" text="Reset Status" id="btn_reset" />
+               </children>
+            </HBox>
          </children>
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -1,4 +1,6 @@
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,9 +20,11 @@ public class Main extends Application {
     LSRCompute lsr;
 
     ChoiceBox<String> boxSrc;
-    Button btnLoad, btnSave, btnSingle, btnAll, btnNew, btnRemove, btnBreak;
+    Button btnLoad, btnSave, btnSingle, btnAll, btnNew, btnRemove, btnBreak, btnContinue, btnReset;
     TextField textNew, textRemove, textBreak;
     TextArea txtContent, txtStatus;
+
+    BooleanProperty singleStepping = new SimpleBooleanProperty(false);
 
     private void reset() {
         txtStatus.clear();
@@ -36,6 +40,7 @@ public class Main extends Application {
         btnNew = (Button) scene.lookup("#btn_new");
         btnRemove = (Button) scene.lookup("#btn_remove");
         btnBreak = (Button) scene.lookup("#btn_break");
+        btnReset = (Button) scene.lookup("#btn_reset");
         textNew = (TextField) scene.lookup("#text_new");
         textRemove = (TextField) scene.lookup("#text_remove");
         textBreak = (TextField) scene.lookup("#text_break");
@@ -105,6 +110,7 @@ public class Main extends Application {
 
         btnSingle.setOnAction(e -> {
             reset();
+            singleStepping.set(true);
             lsr.dijkstra(boxSrc.getValue(), true);
         });
 
@@ -157,6 +163,10 @@ public class Main extends Application {
                 lsr.log("Empty field");
             }
             // C>D
+        });
+
+        btnReset.setOnAction(e -> {
+            reset();
         });
     }
 

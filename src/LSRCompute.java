@@ -168,7 +168,7 @@ public class LSRCompute {
         int N = names.size();
 
         int[] dist = new int[N];
-        boolean[] visited = new boolean[N];
+        Boolean[] visited = new Boolean[N];
         List<String>[] path = new ArrayList[N];
 
         for (int i = 0; i < N; i++) {
@@ -182,38 +182,41 @@ public class LSRCompute {
 
         if (waitKey) log("Steps");
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N; i++) { // worst case would be to visit all nodes, thus bounded by N
             int minDist = Integer.MAX_VALUE, minInd = -1;
 
-            for (int j = 0; j < N; j++) {
+            for (int j = 0; j < N; j++) { // select src initially because dist[n] = 0, select node that current has min distance from src
                 if (!visited[j] && dist[j] < minDist) {
                     minDist = dist[j];
                     minInd = j;
                 }
             }
 
-            visited[minInd] = true;
+            if (minInd != -1) {
 
-            for (Pair<Network.Node, Integer> pair : network.get(minInd).getLinks()) {
-                Network.Node node = pair.getKey();
-                Integer cost = pair.getValue();
+                visited[minInd] = true;
 
-                int k = network.indexOf(node);
-                if (dist[minInd] + cost < dist[k]) {
-                    String name = pair.getKey().getName();
-                    dist[k] = dist[minInd] + cost;
+                for (Pair<Network.Node, Integer> pair : network.get(minInd).getLinks()) { // get all the neighbor nodes of current node
+                    Network.Node node = pair.getKey();
+                    Integer cost = pair.getValue();
 
-                    path[k] = new ArrayList<>();
-                    path[k].addAll(path[minInd]);
-                    path[k].add(name);
+                    int k = network.indexOf(node);
+                    if (dist[minInd] + cost < dist[k]) { // check if visited, or check if current route is the shortest route yet (dist[k] is total cost of src -> k)
+                        String name = pair.getKey().getName();
+                        dist[k] = dist[minInd] + cost;
 
-                    if (waitKey) {
-                        log("Found " + name + ": Path: " + String.join(">", path[k]) + " Cost: " + dist[k], "");
-                        if (useGUI) {
-                            log("");
-                        } else {
-                            log(" [press any key to continue]", "");
-                            new Scanner(System.in).nextLine();
+                        path[k] = new ArrayList<>();
+                        path[k].addAll(path[minInd]);
+                        path[k].add(name);
+
+                        if (waitKey) {
+                            log("Found " + name + ": Path: " + String.join(">", path[k]) + " Cost: " + dist[k], "");
+                            if (useGUI) {
+                                log("");
+                            } else {
+                                log(" [press any key to continue]", "");
+                                new Scanner(System.in).nextLine();
+                            }
                         }
                     }
                 }
